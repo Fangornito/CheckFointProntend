@@ -1,10 +1,25 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import dynamic from "next/dynamic";
+import { ApolloProvider } from "@apollo/client";
+import client from "@/graphql/client";
+import { ChakraProvider } from "@chakra-ui/react";
+import Header from "@/components/Header";
 
-function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+
+interface MyAppProps extends AppProps {
+  pageProps: {
+    pageTitle: string;
+    [key: string]: any;
+  };
 }
 
-// Disabling SSR
-export default dynamic(() => Promise.resolve(App), { ssr: false });
+export default function App({ Component, pageProps }: MyAppProps) {
+  return (
+      <ApolloProvider client={client}>
+        <ChakraProvider>
+        <Header />
+              <Component {...pageProps} />
+        </ChakraProvider>
+      </ApolloProvider>
+  );
+}
